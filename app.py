@@ -1,9 +1,10 @@
+# app.py
 from flask import Flask, request, jsonify
-app = FLASK(__name__)
+app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "<h1> Wishlist App!</h1>"
-    
+    return "<h1>Welcome to our Wishlist app!</h1>"
+
 if __name__ == '__main__':
-    app.run(thread=True, port=5000)
+    app.run(threaded=True, port=5000)
