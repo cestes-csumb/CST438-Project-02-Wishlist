@@ -14,6 +14,10 @@ def loginpage():
             return redirect(url_for('homepage'))
     return render_template('loginpage.html', error=error)
 
+@app.route('/homepage')
+def homepage():
+        return render_template("homepage.html")
+
 #example template
 @app.route('/template-test')
 def test():
