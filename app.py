@@ -3,6 +3,10 @@
 from dataclasses import dataclass
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, session
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import SubmitField, SelectField, RadioField, HiddenField, StringField, IntegerField, FloatField
+from wtforms.validators import InputRequired, Length, Regexp, NumberRange
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -12,6 +16,7 @@ app.config[
 db = SQLAlchemy()
 app.secret_key = 'topsecret'
 db.init_app(app)
+Bootstrap(app)
 
 
 @dataclass
@@ -59,6 +64,13 @@ class Items(db.Model):
     marked_user_id = db.Column(db.Integer, forign_key=True)
 
 
+class CreateUserForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(),Length(min=6, max=20, message="Invalid Length")])
+    password = StringField('Password', validators=[InputRequired(),Length(min=6, max=20, message="Invalid Length")])
+    is_admin = HiddenField()
+    submit = SubmitField('Submit')
+
+
 # root route
 @app.route('/', methods=['GET', 'POST'])
 def loginpage():
@@ -76,10 +88,30 @@ def loginpage():
 def homepage():
     return render_template("homepage.html")
 
-
-@app.route('/createAccount')
+# currently testing and trying to make work
+@app.route('/createAccount', methods=['GET', 'POST'])
 def createAccount():
-    return render_template("createAccount.html")
+    userform = CreateUserForm()
+    if userform.validate_on_submit():
+        un = request.form['username']
+        pw = request.form['password']
+        ia = 'N'
+        newuser = Users(username=un, password=pw, is_admin=ia)
+        # Flask-SQLAlchemy adds to database here
+        db.session.add(newuser)
+        db.session.commit()
+        # create a message to send to the template
+        message = f"User was created."
+        return render_template('createAccount.html', message=message)
+    else:
+        # show errors
+        for field, errors in userform.errors.items():
+            for error in errors:
+                flash("Error in {}: {}".format(
+                    getattr(userform, field).label.text,
+                    error
+                ), 'error')
+        return render_template('createAccount.html', userform=userform)
 
 
 @app.route('/logout')
