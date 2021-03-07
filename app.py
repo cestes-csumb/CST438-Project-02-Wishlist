@@ -1,39 +1,56 @@
 # app.py
 # Authors: Chris Estes
-from flask import Flask, request, jsonify, render_template
-import pymysql.cursors
+from dataclasses import dataclass
+
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, session
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-#Database connection test sample
-def execute(sql, isSelect=True):
-    conn = pymysql.connect(host='s0znzigqvfehvff5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-                           port=3306,
-                           user='e4l6k1v8lciacn5x',
-                           password='p98yj0ifq773irmb',
-                           db='qwicl09ul8c9lcw1',
-                           charset='utf8',
-                           cursorclass=pymysql.cursors.DictCursor)
-    result = None
-    try:
-        with conn.cursor() as cursor:
-            if isSelect:
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                print(f"result = {result}")
-            else:
-                cursor.execute(sql)
-                result = conn.insert_id()
-                conn.commit()
-    finally:
-        conn.close()
-    return result
+app.config['SQLALCHEMY_DATABASE_URI'] ="mysql+pymysql://pf3n93rxwh14176k:zoat5w7a3vgn4rgl@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/k98fz84q0v1bbm9t"
+db = SQLAlchemy()
+app.secret_key = 'topsecret'
+db.init_app(app)
+
+@dataclass
+class Users(db.Model):
+    user_id: int
+    username: str
+    password: str
+    is_admin: str
+
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(20), unique=True)
+    password = db.Column(db.String(20))
+    is_admin = db.Column(db.String(1))
 
 
 # root route
-@app.route('/')
-def index():
-    return "<h1>Welcome to our Wishlist app!</h1>"
+@app.route('/', methods=['GET', 'POST'])
+def loginpage():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'test' or request.form['password'] != 'test':
+            error = 'Invalid Credentials. Try again or Create Account.'
+        else:
+
+            return redirect(url_for('homepage'))
+    return render_template('loginpage.html', error=error)
+
+
+@app.route('/homepage')
+def homepage():
+    return render_template("homepage.html")
+
+
+@app.route('/createAccount')
+def createAccount():
+    return render_template("createAccount.html")
+
+
+@app.route('/logout')
+def logout():
+    return redirect(url_for('loginpage'))
 
 
 # example template
@@ -48,12 +65,11 @@ def returnJson():
     return jsonify({'test': 'var'})
 
 
-#route for testing external db connection
-@app.route('/dbtest')
-def getSomeStuff():
-    sql = f"select * from fp_account;"
-    stuff = execute(sql, True)
-    return jsonify(stuff)
+# route for getting Users from db
+@app.route('/getUsers')
+def getUsers():
+    users = Users.query.all()
+    return jsonify(users)
 
 
 if __name__ == '__main__':
