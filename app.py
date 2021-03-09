@@ -39,7 +39,12 @@ class Lists(db.Model):
     list_name: str
 
     list_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, forign_key=True)
+
+    # foreign key is from users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    # define relationship between lists and users
+
+    users = db.relationship('Users', backref=db.backref('lists', lazy=True))
     list_name = db.Column(db.String(20))
 
 
@@ -60,8 +65,16 @@ class Items(db.Model):
     image_url = db.Column(db.String(200))
     item_url = db.Column(db.String(200))
     item_priority = db.Column(db.String(2))
-    list_id = db.Column(db.Integer, forign_key=True)
-    marked_user_id = db.Column(db.Integer, forign_key=True)
+
+    # foreign key is from Lists table
+    list_id = db.Column(db.Integer, db.ForeignKey('lists.list_id'))
+    # define relationship between items and lists
+    lists = db.relationship('Lists', backref=db.backref('items', lazy=True))
+
+    # foreign key is from Users table
+    marked_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    # define relationship between items and users
+    users = db.relationship('Users', backref=db.backref('items', lazy=True))
 
 
 class CreateUserForm(FlaskForm):
