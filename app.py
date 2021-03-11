@@ -16,7 +16,7 @@ app.config[
 db = SQLAlchemy()
 app.secret_key = 'topsecret'
 db.init_app(app)
-Bootstrap(app)
+bootstrap = Bootstrap(app)
 
 
 @dataclass
@@ -84,6 +84,20 @@ class CreateUserForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class CreateListForm(FlaskForm):
+    list_name = StringField('List Name', validators=[InputRequired(),Length(min=6, max=20, message="Invalid Length")])
+    submit = SubmitField('Submit')
+
+
+class CreateItemForm(FlaskForm):
+    item_name = StringField('Item Name', validators=[InputRequired(),Length(min=3, max=20, message="Invalid Length")])
+    item_description = StringField('Item Description', validators=[InputRequired(), Length(min=6, max=500, message="Invalid Length")])
+    image_url = StringField('Image Url', validators=[InputRequired(), Length(min=6, max=200, message="Invalid Length")])
+    item_url = StringField('Item Url', validators=[InputRequired(), Length(min=6, max=200, message="Invalid Length")])
+    item_priority = IntegerField('Item Priority (1-10)', validators=[InputRequired()])
+    submit = SubmitField('Submit')
+
+
 # root route
 @app.route('/', methods=['GET', 'POST'])
 def loginpage():
@@ -97,7 +111,7 @@ def loginpage():
     return render_template('loginpage.html', error=error)
 
 
-@app.route('/homepage')
+@app.route('/homepage', methods=['GET'])
 def homepage():
     return render_template("homepage.html")
 
@@ -109,6 +123,13 @@ def createAccount():
         un = request.form['username']
         pw = request.form['password']
         ia = 'N'
+
+        user = Users.query.filter_by(username=un).first()  # if this returns a user, then it already exists
+
+        if user:  # if a user is found, we want to redirect back to signup page so user can try again
+            message = f"Username taken, try Again."
+            return render_template('createAccount.html', message=message)
+
         newuser = Users(username=un, password=pw, is_admin=ia)
         # Flask-SQLAlchemy adds to database here
         db.session.add(newuser)
@@ -125,6 +146,61 @@ def createAccount():
                     error
                 ), 'error')
         return render_template('createAccount.html', userform=userform)
+
+# !!! not working, would work but needs to pull user_id from login session
+@app.route('/createList', methods=['GET', 'POST'])
+def createList():
+    listform = CreateListForm()
+    if listform.validate_on_submit():
+        ln = request.form['list_name']
+        # user_id = will have to fetch from persistent login later, add to next line too
+        newlist = Lists(list_name=ln)
+        # Flask-SQLAlchemy adds to database here
+        db.session.add(newlist)
+        db.session.commit()
+        # create a message to send to the template
+        message = f"List was created."
+        return render_template('createList.html', message=message)
+    else:
+        # show errors
+        for field, errors in listform.errors.items():
+            for error in errors:
+                flash("Error in {}: {}".format(
+                    getattr(listform, field).label.text,
+                    error
+                ), 'error')
+        return render_template('createList.html', listform=listform)
+
+
+# !!! not working, would work but needs to pull user_id from login session, and list_id from somewhere
+@app.route('/createItem', methods=['GET', 'POST'])
+def createItem():
+    itemform = CreateItemForm()
+    if itemform.validate_on_submit():
+        itemname = request.form['item_name']
+        itemdesc = request.form['item_description']
+        imgurl = request.form['image_url']
+        itemurl = request.form['item_url']
+        itempri = request.form['item_priority']
+        # uid = (user_id) will have to fetch from persistent login later, add to "newitem" line later
+        # lid = (list_id) will need to be passed in somehow, add to "newitem" line later
+        newitem = Items(item_name=itemname, item_description=itemdesc, image_url=imgurl, item_url=itemurl,
+                        item_priority=itempri)
+        # Flask-SQLAlchemy adds to database here
+        db.session.add(newitem)
+        db.session.commit()
+        # create a message to send to the template
+        message = f"Item was created and added to list."
+        return render_template('createItem.html', message=message)
+    else:
+        # show errors
+        for field, errors in itemform.errors.items():
+            for error in errors:
+                flash("Error in {}: {}".format(
+                    getattr(itemform, field).label.text,
+                    error
+                ), 'error')
+        return render_template('createItem.html', itemform=itemform)
 
 
 @app.route('/logout')

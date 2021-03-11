@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>successful login. this is the homepage</h1>
-<h4><a href="logout">Logout</a> here</h4>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+	<style>
+		body { background: #ffffff; }
+	</style>
+{% endblock %}
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="row pb-5">
+		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
+
+            <h1 class="pt-5 pb-2">This is the homepage</h1>
+
+        </div>
+	</div>
+</div>
+{% endblock %}

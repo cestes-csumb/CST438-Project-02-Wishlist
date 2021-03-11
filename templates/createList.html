@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
@@ -12,7 +11,7 @@
 
 
 {% block title %}
-Create Account
+Add a List
 {% endblock %}
 
 
@@ -22,7 +21,7 @@ Create Account
 	<div class="row pb-5">
 		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-		<h1 class="pt-5 pb-2">Add a New User</h1>
+		<h1 class="pt-5 pb-2">Add a New List</h1>
 
 		{% if message %}
 
@@ -52,7 +51,7 @@ Create Account
 			<!-- end of flash -->
 
 			<!-- the form, through WTForms -->
-		    {{ wtf.quick_form(userform) }}
+		    {{ wtf.quick_form(listform) }}
 
 		{% endif %}
 

@@ -1,15 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
- <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+	<style>
+		body { background: #ffffff; }
+	</style>
+{% endblock %}
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block content %}
     <div class="container">
       <h1>Please login</h1>
       <br>
-      <form action="" method="post">
+      <form action="/login" method="post">
         <input type="text" placeholder="Username" name="username" value="{{
           request.form.username }}">
          <input type="password" placeholder="Password" name="password" value="{{
@@ -19,7 +25,6 @@
       {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
       {% endif %}
+    <h4>or <a href="createAccount">Create Account</a></h4>
     </div>
-    <h4><a href="createAccount">Create Account</a> here</h4>
-  </body>
-</html>
+{% endblock %}
