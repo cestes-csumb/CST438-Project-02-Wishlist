@@ -8,14 +8,15 @@
     <link href="static/styles.css" rel="stylesheet" type="text/css"/>
 
 </head>
+<body>
 <nav class="padding">
     <ul class="nav nav-pills">
         <li class="nav-item">
             <a class="nav-link active" href="{{ url_for('homepage') }}">Home</a>
         </li>
-        {#    <li class="nav-item">#}
-        {#        <a class="nav-link" href="{{ url_for('createList') }}">List</a>#}
-        {#    </li>#}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('updateMerch') }}">Update Merch</a>
+            </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('loginpage') }}">Login Out</a>
         </li>

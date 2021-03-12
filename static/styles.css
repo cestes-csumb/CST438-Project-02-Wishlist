@@ -39,7 +39,9 @@
     background-position: 1000px;
   }
 }
-
+#white{
+    background-color: white;
+}
 #homebg{
    background-image: url('https://i.kym-cdn.com/photos/images/facebook/001/624/838/07c.png');
    background-color: rgba(35, 35, 63, 0.445);
@@ -52,3 +54,4 @@
 #footbg{
   background: rgba(53, 53, 59, 0.5);
 }
+

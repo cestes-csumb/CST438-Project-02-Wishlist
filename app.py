@@ -25,6 +25,11 @@ def homepage():
 def createAccount():
         return render_template("createAccount.html")
 
+@app.route('/updateMerch')
+def updateMerch():
+        return render_template("updateMerch.html")
+
+
 @app.route('/logout')
 def logout():
         return redirect(url_for('loginpage'))
