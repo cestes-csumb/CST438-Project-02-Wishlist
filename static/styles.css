@@ -4,6 +4,7 @@
 .padding{
     padding-left: 1rem;
     padding-right: 1rem;
+    padding-top: 1rem;
 }
 #homecolor{
   background: rgba(53, 53, 59, 0.5);

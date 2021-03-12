@@ -29,6 +29,9 @@ def createAccount():
 def updateMerch():
         return render_template("updateMerch.html")
 
+@app.route('/profileSettings')
+def profileSettings():
+        return render_template("profileSettings.html")
 
 @app.route('/logout')
 def logout():
