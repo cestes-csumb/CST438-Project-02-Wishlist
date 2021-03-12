@@ -1,0 +1,30 @@
+#loginHead {
+    text-align: center;
+}
+#xmas {
+  --color1: black;
+  --color2: rgb(16, 16, 124);
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  font-size: 46px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color1),
+    var(--color1) 30px,
+    var(--color2) 30px,
+    var(--color2) 60px
+  );
+  background-clip: unset;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: 40s linear 0s infinite move;
+}
+
+@keyframes move {
+  from {
+    background-position: 0px;
+  }
+  to {
+    background-position: 1000px;
+  }
+}
