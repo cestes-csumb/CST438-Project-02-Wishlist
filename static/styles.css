@@ -1,9 +1,20 @@
-#loginHead {
+.center {
     text-align: center;
 }
-#xmas {
+.padding{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+#homecolor{
+  background: rgba(53, 53, 59, 0.5);
+  color: white;
+}
+#color{
+    color: black;
+}
+#wow {
   --color1: black;
-  --color2: rgb(16, 16, 124);
+  --color2: darkblue;
   font-family: "Open Sans", sans-serif;
   text-align: center;
   font-size: 46px;
@@ -14,7 +25,7 @@
     var(--color2) 30px,
     var(--color2) 60px
   );
-  background-clip: unset;
+  background-clip: inherit;
   color: transparent;
   -webkit-background-clip: text;
   animation: 40s linear 0s infinite move;
@@ -27,4 +38,17 @@
   to {
     background-position: 1000px;
   }
+}
+
+#homebg{
+   background-image: url('https://i.kym-cdn.com/photos/images/facebook/001/624/838/07c.png');
+   background-color: rgba(35, 35, 63, 0.445);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: auto;
+    height: auto;
+}
+#footbg{
+  background: rgba(53, 53, 59, 0.5);
 }

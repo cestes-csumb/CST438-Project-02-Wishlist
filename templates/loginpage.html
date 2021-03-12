@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
+<head>
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-     <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
 
-  </head>
+</head>
 
-  <body id="loginHead">
-  <br>
-  <h1>Welcome to Group D's Wishlist :)</h1>
-<br><br>
-  <div class="card">
-    <div class="card-body">
-     <div class="container">
-     <br>
-      <h2 class="card-title">Please login</h2>
-     <br>
-        <h5 class="card-subtitle mb-2 text-muted">Login or Create Account</h5>
-      <br>
-      <form action="" method="post" class ="card-text">
-        <input type="text" placeholder="Username" name="username" value="{{
-          request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
-          request.form.password }}">
-        <input class="btn btn-outline-success" type="submit" value="Login">
-      </form>
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-
-  </div>
+<body class="center">
 <br>
-    <h4><button href="createAccount" class="btn btn-outline-info">Create Account</button> here</h4>
+<h1>Welcome to Group D's Wishlist :)</h1>
+<br><br>
+<div class="card">
+    <div class="card-body">
+        <div class="container">
+            <br>
+            <h2 class="card-title">Please login</h2>
+            <br>
+            <h5 class="card-subtitle mb-2 text-muted">Login or Create Account</h5>
+            <br>
+            <form action="" method="post" class="card-text">
+                <input type="text" placeholder="Username" name="username" value="{{ request.form.username }}">
+                <input type="password" placeholder="Password" name="password" value="{{ request.form.password }}">
+                <input class="btn btn-outline-success" type="submit" value="Login">
+            </form>
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
 
-       </div>
+        </div>
+        <br>
+        <h4>
+            <button href="createAccount" class="btn btn-outline-info">Create Account</button>
+            here
+        </h4>
+
     </div>
-  </body>
+</div>
+</body>
 </html>
