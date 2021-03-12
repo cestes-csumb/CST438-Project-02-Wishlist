@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile Settings</title>
+    <title>Add Product</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="static/styles.css" rel="stylesheet" type="text/css"/>
@@ -31,27 +31,28 @@
 
 <div class="card">
     <div class="card-body">
-        <h2 class="card-title">Update user account settings</h2>
+        <h2 class="card-title">Update product details</h2>
         <h4 class="card-subtitle">Disclaimer: Implementation scheduled</h4>
         <br>
-        <form action="/updateMerch ">
-            Current Username:
-            <input type="text" name="username" value="Seudo Username">
+        <form >
+            Product Name:
+            <input type="text" name="merchName" value="Seudo Product Name">
             <br>
 
-            New Password:
-            <input type="password" name="password" value="Seudo Password">
-
+            Product Image:
+            <input type="image" name="merchImg"
+                   src="https://edit.csumb.edu/sites/default/files/styles/profile_large/public/photo_1.jpg" width="100"
+                   , height="100">
             <br>
 
-            New Password Confirmation:
-            <input type="password" name="passwordConf" value="Seudo Password">
+            Product Description:
+            <input type="text" name="merchDesc" value="Seudo Product Description">
             <br>
 
 
         </form>
         <br>
-        <button class="btn btn-info"> Update User</button>
+        <button class="btn btn-info"> Add Product</button>
     </div>
 </div>
 </body>

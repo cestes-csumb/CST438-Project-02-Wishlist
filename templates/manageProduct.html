@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile Settings</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    <title>Manage Products</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="static/styles.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -31,27 +30,14 @@
 
 <div class="card">
     <div class="card-body">
-        <h2 class="card-title">Update user account settings</h2>
-        <h4 class="card-subtitle">Disclaimer: Implementation scheduled</h4>
+        <h2 class="card-title">Product Options</h2>
+
         <br>
-        <form action="/updateMerch ">
-            Current Username:
-            <input type="text" name="username" value="Seudo Username">
-            <br>
+        <button type="button"  class="btn btn-warning"><a href="/updateMerch"> Update/Delete Product</a></button>
+        <p>(Update/Delete button might need to first return all items, then able to choose a specific item and then user will be redirected to the correct page to edit) </p>
+        <br><br>
+        <button type="button"  class="btn btn-warning"><a href="addProduct"> Add New Product</a></button>
 
-            New Password:
-            <input type="password" name="password" value="Seudo Password">
-
-            <br>
-
-            New Password Confirmation:
-            <input type="password" name="passwordConf" value="Seudo Password">
-            <br>
-
-
-        </form>
-        <br>
-        <button class="btn btn-info"> Update User</button>
     </div>
 </div>
 </body>
