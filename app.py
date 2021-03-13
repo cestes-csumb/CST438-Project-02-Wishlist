@@ -19,7 +19,7 @@ def loginpage():
 
 @app.route('/wip_homepage')
 def wip_homepage():
-        return render_template("homepage.html")
+        return render_template("wip_homepage.html")
 
 @app.route('/wip_createAccount')
 def wip_createAccount():
