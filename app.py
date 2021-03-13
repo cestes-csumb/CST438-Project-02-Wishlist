@@ -67,7 +67,7 @@ def load_user(id):
 @dataclass
 class Lists(db.Model):
     list_id: int
-    user_id: str
+    user_id: int
     list_name: str
 
     list_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -282,9 +282,11 @@ def get_username_by_id(id):
 @app.route('/Items', methods=['GET'])
 def getItems():
     # we will return fake data until we have some items present in the DB
-    return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
-                    'item_url': 'https://www.youtube.com/watch?v=hzGmbwS_Drs', 'item_priority': 1,
-                    'list_id': 1, 'marked_user_id': 100})
+    #return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
+    #                'item_url': 'https://www.youtube.com/watch?v=hzGmbwS_Drs', 'item_priority': 1,
+    #                'list_id': 1, 'marked_user_id': 100})
+    items = Items.query.all()
+    return jsonify(items)
 
 
 # Route for getting a list of all items for a specific list id from the DB
@@ -301,18 +303,16 @@ def get_items_by_list_id(lid):
 @app.route('/Lists', methods=['GET'])
 def getLists():
     # we will return fake data until we have some lists present in the DB
-    # lists = Lists.query.all()
-    # return jsonify(lists)
-    return jsonify({'list_id': 1, 'user_id': 1, 'list_name': 'test list'})
+    lists = Lists.query.all()
+    return jsonify(lists)
 
 
 # Route for getting a specific list by list id from the DB
 @app.route('/Lists:id=<id>', methods=['GET'])
 def get_list_by_id(id):
     # we will return fake data until we have some lists present in the DB
-    # list = Lists.query.filter_by(list_id=id).first()
-    # return jsonify(list)
-    return jsonify({'list_id': id, 'user_id': 1, 'list_name': 'test list'})
+    list = Lists.query.filter_by(list_id=id).first()
+    return jsonify(list)
 
 
 # Route for getting a list or lists from a specific user id from the DB
@@ -322,9 +322,8 @@ def get_list_by_user_id(uid):
     # if user's only have one list:
     # list = List.query.filter_by(user_id=uid).first()
     # if user's have multiple lists:
-    # list = list.query.filter_by(user_id=uid).all()
-    # return jsonify(list)
-    return jsonify({'list_id': 1, 'user_id': uid, 'list_name': 'test list'})
+    list = Lists.query.filter_by(user_id=uid).all()
+    return jsonify(list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
