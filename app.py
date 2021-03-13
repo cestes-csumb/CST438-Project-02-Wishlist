@@ -41,9 +41,9 @@ def addProduct():
 def profileSettings():
         return render_template("profileSettings.html")
 
-@app.route('/logout')
+@app.route('/wip_logout')
 def logout():
-        return redirect(url_for('loginpage'))
+        return redirect(url_for('wip_loginpage'))
 
 #example template
 @app.route('/template-test')
