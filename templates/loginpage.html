@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+{{ super() }}
+	<style>
+		body { background: #ffffff; }
+	</style>
+{% endblock %}
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <h1>Please login</h1>
+      <br>
+      {{ wtf.quick_form(loginform) }}
+    <h4>or <a href="createAccount">Create Account</a></h4>
+    </div>
+{% endblock %}

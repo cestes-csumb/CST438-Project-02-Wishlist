@@ -1,0 +1,42 @@
+{% extends "bootstrap/base.html" %}
+{% block head %}
+    {{ super() }}
+    {% if title %}
+        <title> {{ title }} - CST438 Wishlist</title>
+    {% else %}
+        <title>CST438 Wishlist</title>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<body>
+
+{% block navbar %}
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('homepage') }}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('createList') }}">List</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+    </li>
+</ul>
+{% endblock %}
+
+    <hr>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+           </ul>
+       {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+{% endblock %}
