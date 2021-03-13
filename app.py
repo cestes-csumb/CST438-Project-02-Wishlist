@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 #root route
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/wip', methods=['GET', 'POST'])
 def loginpage():
     error = None
     if request.method == 'POST':
@@ -14,16 +14,16 @@ def loginpage():
             error = 'Invalid Credentials. Try again or Create Account.'
         else:
 
-            return redirect(url_for('homepage'))
-    return render_template('loginpage.html', error=error)
+            return redirect(url_for('wip_homepage'))
+    return render_template('wip_loginpage.html', error=error)
 
-@app.route('/homepage')
-def homepage():
+@app.route('/wip_homepage')
+def wip_homepage():
         return render_template("homepage.html")
 
-@app.route('/createAccount')
-def createAccount():
-        return render_template("createAccount.html")
+@app.route('/wip_createAccount')
+def wip_createAccount():
+        return render_template("wip_createAccount.html")
 
 @app.route('/updateMerch')
 def updateMerch():
@@ -47,7 +47,7 @@ def logout():
 
 #example template
 @app.route('/template-test')
-def test():
+def wip_test():
     return render_template("test.html")
 
 #example json return
