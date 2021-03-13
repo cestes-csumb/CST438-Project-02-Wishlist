@@ -17,7 +17,15 @@ Homepage
 		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
             <h1 class="pt-5 pb-2">This is the homepage, welcome {{ current_user.username }}</h1>
-
+            <h2 class="pt-3 pb-2">API Examples:<br>
+                <ul>
+                    <li><a href="{{ url_for('getUsers') }}">All Users</a></li>
+                    <li><a href="{{ url_for('get_user_by_id', id=9)}}">Get User By ID</a></li>
+                    <li><a href="{{ url_for('getItems') }}">All Items</a></li>
+                    <li><a href="{{ url_for('getLists') }}">All Lists</a></li>
+                    <li><a href="{{ url_for('get_list_by_user_id', uid=9) }}">Get Lists By User ID</a></li>
+                </ul>
+            </h2>
         </div>
 	</div>
 </div>
