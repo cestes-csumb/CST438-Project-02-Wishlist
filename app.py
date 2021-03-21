@@ -346,6 +346,27 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+# Currently for testing and demonstration
+@app.route('/updateList:lid=<lid>', methods=['GET'])
+def updatelist(lid):
+    list = Lists.query.filter_by(list_id=lid).one()
+    if list:
+        list.list_name = "test list edit 2"
+        db.session.add(list)
+        db.session.commit()
+    lists = Lists.query.all()
+    return jsonify(lists)
+
+# Currently for testing and demonstration
+@app.route('/deleteList:lid=<lid>', methods=['GET'])
+def deletelist(lid):
+    list = Lists.query.filter_by(list_id=lid).one()
+    if list:
+        db.session.delete(list)
+        db.session.commit()
+    lists = Lists.query.all()
+    return jsonify(lists)
+
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
