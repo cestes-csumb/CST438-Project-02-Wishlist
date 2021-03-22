@@ -325,6 +325,23 @@ def get_list_by_user_id(uid):
     list = Lists.query.filter_by(user_id=uid).all()
     return jsonify(list)
 
+# Route for deleting an item in the list
+@app.route('/deleteItem:lid=<lid>', methods=['GET'])
+def delete_item(lid):
+    lid.query.filter(item_id=lid).delete()
+    db.session.commit()
+    return 'Item deleted'
+
+
+# Route for updating item in the list
+@app.route('/updateItem/<lid>', methods=['GET'])
+def update_item(lid):
+    item = db.session.query(Items).get(lid)
+    form = createItem(object=item)
+    if form.validate_on_submit:
+        form.populate_obj(item)
+        db.session.commit()
+    return render_template('createItem.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
