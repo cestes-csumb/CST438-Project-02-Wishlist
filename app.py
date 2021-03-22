@@ -1,5 +1,5 @@
 # app.py
-# Authors: Chris Estes, Brian Carbonneau
+# Authors: Chris Estes, Brian Carbonneau, Madeleine Macaulay
 from dataclasses import dataclass
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
