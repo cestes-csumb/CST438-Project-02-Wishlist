@@ -282,7 +282,7 @@ def get_username_by_id(id):
 @app.route('/Items', methods=['GET'])
 def getItems():
     # we will return fake data until we have some items present in the DB
-    #return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
+    # return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
     #                'item_url': 'https://www.youtube.com/watch?v=hzGmbwS_Drs', 'item_priority': 1,
     #                'list_id': 1, 'marked_user_id': 100})
     items = Items.query.all()
@@ -346,7 +346,8 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# Currently for testing and demonstration
+
+# Currently for testing and demonstration, needs variable grab and connection to form?
 @app.route('/updateList:lid=<lid>', methods=['GET'])
 def updatelist(lid):
     list = Lists.query.filter_by(list_id=lid).one()
@@ -357,7 +358,8 @@ def updatelist(lid):
     lists = Lists.query.all()
     return jsonify(lists)
 
-# Currently for testing and demonstration
+
+# Currently for testing and demonstration, needs variable grab and connection to button?
 @app.route('/deleteList:lid=<lid>', methods=['GET'])
 def deletelist(lid):
     list = Lists.query.filter_by(list_id=lid).one()
@@ -366,6 +368,33 @@ def deletelist(lid):
         db.session.commit()
     lists = Lists.query.all()
     return jsonify(lists)
+
+
+# Currently for testing and demonstration, needs variable grab and connection to page form
+@app.route('/updateItem:iid=<iid>', methods=['GET'])
+def updateitem(iid):
+    item = Items.query.filter_by(item_id=iid).one()
+    if item:
+        item.item_name = request.form['item_name']
+        item.item_description = request.form['item_description']
+        item.image_url = request.form['image_url']
+        item.item_url = request.form['item_url']
+        item.item_priority = request.form['item_priority']
+        db.session.add(item)
+        db.session.commit()
+    items = Items.query.all()
+    return jsonify(items)
+
+
+# Currently for testing and demonstration, needs variable grab and connection to button?
+@app.route('/deleteItem:iid=<iid>', methods=['GET'])
+def deletelist(iid):
+    item = Items.query.filter_by(item_id=iid).one()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+    items = Items.query.all()
+    return jsonify(items)
 
 
 if __name__ == '__main__':
