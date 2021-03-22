@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block styles %}
-{{ super() }}
-	<style>
-		body { background: #ffffff; }
-	</style>
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block title %}
@@ -13,10 +12,26 @@ Homepage
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-      <h1>Please login</h1>
-      <br>
-      {{ wtf.quick_form(loginform) }}
-    <h4>or <a href="createAccount">Create Account</a></h4>
+<div class="container">
+<body class="center">
+<br>
+<h1>Welcome to Group D's Wishlist :)</h1>
+<br><br>
+<div class="card">
+    <div class="card-body">
+        <div class="container">
+            <br>
+            <h2 class="card-title">Please Login</h2>
+            <br>
+            <h5 class="card-subtitle mb-2 text-muted">Login or Create Account</h5>
+            <br>
+            <br>
+            {{ wtf.quick_form(loginform) }}
+            <br>
+            <button class="btn btn-outline-info"><a href="createAccount">Create Account</a></button>
+        </div>
     </div>
+</div>
+</body>
+</div>
 {% endblock %}

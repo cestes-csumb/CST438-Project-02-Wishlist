@@ -2,7 +2,7 @@
 # Authors: Chris Estes, Brian Carbonneau
 from dataclasses import dataclass
 
-from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, session
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectField, RadioField, HiddenField, StringField, IntegerField, FloatField, \
@@ -134,14 +134,15 @@ class CreateItemForm(FlaskForm):
 class CreateLoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Sign-In')
 
 
 # root route
 @app.route('/', methods=['GET'])
 @login_required
 def homepage():
-    return render_template("homepage.html")
+    user_id = session.get('user_id', None)
+    return render_template("homepage.html", id=user_id)
 
 
 # currently testing and trying to make work
@@ -185,7 +186,7 @@ def createList():
     listform = CreateListForm()
     if listform.validate_on_submit():
         ln = request.form['list_name']
-        uid = current_user.user_id
+        uid = session.get('user_id', None)
         newlist = Lists(user_id=uid, list_name=ln)
         # Flask-SQLAlchemy adds to database here
         db.session.add(newlist)
@@ -215,10 +216,10 @@ def createItem():
         imgurl = request.form['image_url']
         itemurl = request.form['item_url']
         itempri = request.form['item_priority']
-        # uid = (user_id) will have to fetch from persistent login later, add to "newitem" line later
-        # lid = (list_id) will need to be passed in somehow, add to "newitem" line later
+        uid = session.get('user_id', None)
+        lid = session.get('list_id', None)
         newitem = Items(item_name=itemname, item_description=itemdesc, image_url=imgurl, item_url=itemurl,
-                        item_priority=itempri)
+                        item_priority=itempri, list_id=lid)
         # Flask-SQLAlchemy adds to database here
         db.session.add(newitem)
         db.session.commit()
@@ -237,9 +238,9 @@ def createItem():
 
 
 # example template
-@app.route('/template-test')
+@app.route('/test')
 def test():
-    return render_template("test.html")
+    return render_template("manageProduct.html")
 
 
 # example json return
@@ -281,10 +282,6 @@ def get_username_by_id(id):
 # Route for getting a list of all items from the DB
 @app.route('/Items', methods=['GET'])
 def getItems():
-    # we will return fake data until we have some items present in the DB
-    #return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
-    #                'item_url': 'https://www.youtube.com/watch?v=hzGmbwS_Drs', 'item_priority': 1,
-    #                'list_id': 1, 'marked_user_id': 100})
     items = Items.query.all()
     return jsonify(items)
 
@@ -292,17 +289,14 @@ def getItems():
 # Route for getting a list of all items for a specific list id from the DB
 @app.route('/Items:lid=<lid>', methods=['GET'])
 def get_items_by_list_id(lid):
-    # we will return fake data until we have some items present in the DB
-    return jsonify({'item_id': 1, 'item_name': 'test item', 'item_description': 'test description',
-                    'item_url': 'https://www.youtube.com/watch?v=0DHrgwLxbGU', 'item_priority': 1,
-                    'list_id': lid, 'marked_user_id': 100})
+    items = Items.query.filter_by(list_id=lid).all()
+    return jsonify(items)
 
 
 # Lists Endpoints
 # Route for getting a list of all lists from the DB
 @app.route('/Lists', methods=['GET'])
 def getLists():
-    # we will return fake data until we have some lists present in the DB
     lists = Lists.query.all()
     return jsonify(lists)
 
@@ -310,7 +304,6 @@ def getLists():
 # Route for getting a specific list by list id from the DB
 @app.route('/Lists:id=<id>', methods=['GET'])
 def get_list_by_id(id):
-    # we will return fake data until we have some lists present in the DB
     list = Lists.query.filter_by(list_id=id).first()
     return jsonify(list)
 
@@ -318,9 +311,6 @@ def get_list_by_id(id):
 # Route for getting a list or lists from a specific user id from the DB
 @app.route('/Lists:uid=<uid>', methods=['GET'])
 def get_list_by_user_id(uid):
-    # we will return fake data until we have some lists present in the DB
-    # if user's only have one list:
-    # list = List.query.filter_by(user_id=uid).first()
     # if user's have multiple lists:
     list = Lists.query.filter_by(user_id=uid).all()
     return jsonify(list)
@@ -337,13 +327,34 @@ def login():
             flash('Invalid username/password')
             return render_template('loginpage.html', title='Log In', loginform=loginform)
         login_user(user)
+        session['user_id'] = user.user_id
         return redirect(url_for('homepage'))
     return render_template('loginpage.html', title='Log In', loginform=loginform)
+
+# shows all wishlists associated with user, gathers required info for user to view wishlist
+@app.route('/myWishlists', methods=['GET', 'POST'])
+@login_required
+def currentLists():
+    user_id = session.get('user_id', None)
+    if request.method == 'POST':
+        session['list_id'] = request.form['list_id']
+        return redirect(url_for('view_list'))
+    return render_template('currentLists.html', user_id=user_id)
+
+# shows all items in current wishlist, linked from myWishlists
+@app.route('/wishlist', methods=['GET', 'POST'])
+@login_required
+def view_list():
+    user_id = session.get('user_id', None)
+    list_id = session.get('list_id', None)
+    return render_template('myWishlist.html', user_id=user_id, list_id=list_id)
 
 
 @app.route('/logout')
 def logout():
     logout_user()
+    session.pop('user_id')
+    session.pop('list_id')
     return redirect(url_for('login'))
 
 
