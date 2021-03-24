@@ -243,11 +243,6 @@ def test():
     return render_template("manageProduct.html")
 
 
-# example json return
-@app.route('/json-test')
-def returnJson():
-    return jsonify({'test': 'var'})
-
 
 # Users Endpoints
 # Route for getting a list of all users from DB
