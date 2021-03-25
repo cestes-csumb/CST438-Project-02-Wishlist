@@ -12,6 +12,24 @@
     <title>My Wishlist</title>
 {% endblock %}
 {% block content %}
+<center>
+<div class="wishlist">
+</div>
+<div class="wishlist-items">
+    <table class="table">
+    <tr>
+        <th>Item</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>URL</th>
+        <th>Priority</th>
+        <th>Edit</th>
+    </tr>
+    </table>
+    <hr>
+    <button class='btn btn-success' id='add-item'> Add Item </button><br>
+</div>
+</center>
 <script>
     async function fetchListName(url){
         $.getJSON(url, function(result){
@@ -26,12 +44,14 @@
                             $(".table").append("<tr><td>" + result[i].item_name +
                                 "</td><td><img src=\"" + result[i].image_url + "\" width=200 height=200></td>" +
                                 "<td>" + result[i].item_description + "</td><td><a href=\"" + result[i].item_url +
-                                "\">" + result[i].item_url + "</a></td>" + "<td><b>" + result[i].item_priority + "</b></td></tr>")
+                                "\">" + result[i].item_url + "</a></td>" + "<td><b>" + result[i].item_priority + "</b></td>"
+                                + "<td><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"item_id\" value=\"" + result[i].item_id
+                                + "\"><input type=\"submit\" class='btn btn-danger' value=\"Edit\"></form></td></tr>")
                         }
-                        $(".wishlist-items").append("<center><br><button class='btn btn-success'> Add Item </button></center>")
+                        $(".wishlist-items").append("<hr><br>")
                     }
                     else{
-                        $(".wishlist-items").append("<center><h2> No items found!</h2>" + "<br><button class='btn btn-success'> Add Item </button></center>")
+                        $(".wishlist-items").append("<h2> No items found!</h2>")
                     }
                 })
             }
@@ -41,19 +61,9 @@
     //we use the get_items_by_list_id endpoint to get all items from the DB that have are associated with the list_id
     let items_url = "{{ url_for('get_items_by_list_id', lid=list_id) }}"
     fetchItems(items_url);
+    $("#add-item").on("click", function (){
+        window.location.replace("{{ url_for('createItem') }}")
+    })
 </script>
-<div class="wishlist">
-</div>
-<div class="wishlist-items">
-    <table class="table">
-    <tr>
-        <th>Item</th>
-        <th>Image</th>
-        <th>Description</th>
-        <th>URL</th>
-        <th>Priority</th>
-    </tr>
-    </table>
-</div>
 {% endblock %}
 </html>

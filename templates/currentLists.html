@@ -18,10 +18,9 @@
                 let url = "{{ url_for('get_list_by_user_id', uid=user_id) }}"
                 $.getJSON(url, function(result){
                     for(i = 0; i< result.length; i++){
-                        $(".wishlist").append("<h2 class=\"jumbotron\">" + result[i].list_name + "</h2>"
+                        $(".wishlist").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].list_name + "</h3>"
                         +"<form action=\"\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
-                        + "\"><input type=\"submit\" class='btn btn-success' value=\"View List\"></form><form action=\"deleteList\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
-                        + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete List\"></form>")
+                        + "\"><input type=\"submit\" class='btn btn-success' value=\"View List\"></form></div></div><br><br>")
                     }
                 })
             }
