@@ -1,5 +1,5 @@
 # app.py
-# Authors: Chris Estes, Brian Carbonneau
+# Authors: Chris Estes, Brian Carbonneau, Madeleine Macaulay
 from dataclasses import dataclass
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, session
@@ -363,6 +363,23 @@ def get_list_by_user_id(uid):
     list = Lists.query.filter_by(user_id=uid).all()
     return jsonify(list)
 
+# Route for deleting an item in the list
+@app.route('/deleteItem:lid=<lid>', methods=['GET'])
+def delete_item(lid):
+    lid.query.filter(item_id=lid).delete()
+    db.session.commit()
+    return 'Item deleted'
+
+
+# Route for updating item in the list
+@app.route('/updateItem/<lid>', methods=['GET'])
+def update_item(lid):
+    item = db.session.query(Items).get(lid)
+    form = createItem(object=item)
+    if form.validate_on_submit:
+        form.populate_obj(item)
+        db.session.commit()
+    return render_template('createItem.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -406,6 +423,18 @@ def logout():
     if session.get('list_id'):
         session.pop('list_id')
     return redirect(url_for('login'))
+
+
+
+@app.route('/deleteList', methods=['POST'])
+def deletelist():
+    lid = request.form['list_id']
+    user_id = session.get('user_id', None)
+    list = Lists.query.filter_by(list_id=lid).one()
+    if list and list.user_id == user_id:
+        db.session.delete(list)
+        db.session.commit()
+    return redirect(url_for('currentLists'))
 
 
 if __name__ == '__main__':

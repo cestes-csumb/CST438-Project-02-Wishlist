@@ -24,7 +24,7 @@
                     if(result.length > 0) {
                         for (i = 0; i < result.length; i++) {
                             $(".table").append("<tr><td>" + result[i].item_name +
-                                "</td><td><img src=\"" + result[i].image_url + "\"></td>" +
+                                "</td><td><img src=\"" + result[i].image_url + "\" width=200 height=200></td>" +
                                 "<td>" + result[i].item_description + "</td><td><a href=\"" + result[i].item_url +
                                 "\">" + result[i].item_url + "</a></td>" + "<td><b>" + result[i].item_priority + "</b></td></tr>")
                         }
