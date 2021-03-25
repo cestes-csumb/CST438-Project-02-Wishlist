@@ -388,7 +388,7 @@ def updateitem(iid):
 
 # Currently for testing and demonstration, needs variable grab and connection to button?
 @app.route('/deleteItem:iid=<iid>', methods=['GET'])
-def deletelist(iid):
+def deleteitem(iid):
     item = Items.query.filter_by(item_id=iid).one()
     if item:
         db.session.delete(item)
