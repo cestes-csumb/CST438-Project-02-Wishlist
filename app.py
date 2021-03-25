@@ -219,7 +219,6 @@ def createList():
                 ), 'error')
         return render_template('createList.html', listform=listform)
 
-
 # !!! not working needs to pull list_id from somewhere
 @app.route('/createItem', methods=['GET', 'POST'])
 @login_required
@@ -250,12 +249,6 @@ def createItem():
                     error
                 ), 'error')
         return render_template('createItem.html', itemform=itemform)
-
-
-# example template
-@app.route('/test')
-def test():
-    return render_template("manageProduct.html")
 
 # user settings route
 @app.route('/userSettings', methods=['GET', 'POST'])
@@ -395,6 +388,12 @@ def currentLists():
 def view_list():
     user_id = session.get('user_id', None)
     list_id = session.get('list_id', None)
+    # edit button currently does a post method, it'll simply just reload the page
+    # store the item_id as part of the session and print it to the console
+    if request.method == 'POST':
+        session['item_id'] = request.form['item_id']
+        print(session.get('item_id'))
+
     return render_template('myWishlist.html', user_id=user_id, list_id=list_id)
 
 
