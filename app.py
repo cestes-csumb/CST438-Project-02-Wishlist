@@ -111,7 +111,10 @@ class Items(db.Model):
 
 class CreateUserForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
-    password = StringField('Password', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
+    # regex based on: https://www.geeksforgeeks.org/check-if-a-string-contains-uppercase-lowercase-special-characters-and-numeric-values/
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length"),
+                                                     Regexp(regex="(?=.*[a-zA-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*., ?])+",
+                                                            message="Must be alphanumeric AND contain a special character")])
     is_admin = HiddenField()
     submit = SubmitField('Submit')
 
@@ -135,6 +138,18 @@ class CreateLoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign-In')
+
+class CreateUsernameSettingsForm(FlaskForm):
+    desiredUsername = StringField('Desired Username', validators=[InputRequired()])
+    submit = SubmitField('Update Username')
+
+class CreatePasswordSettingsForm(FlaskForm):
+    currentPassword = PasswordField('Current Password', validators=[InputRequired()])
+    # regex based on: https://www.geeksforgeeks.org/check-if-a-string-contains-uppercase-lowercase-special-characters-and-numeric-values/
+    newPassword = PasswordField('New Password', validators=[InputRequired(), Length(min=6, max=500, message="Invalid Length"),
+                                                            Regexp(regex="(?=.*[a-zA-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*., ?])+",
+                                                                   message="Must be alphanumeric AND contain a special character")])
+    submit = SubmitField('Update Password')
 
 
 # root route
@@ -242,7 +257,45 @@ def createItem():
 def test():
     return render_template("manageProduct.html")
 
+# user settings route
+@app.route('/userSettings', methods=['GET', 'POST'])
+@login_required
+def userSettings():
+    user_id = session.get('user_id', None)
+    return render_template('userSettings.html', user_id=user_id)
 
+# edit username
+@app.route('/userSettings/editUsername', methods=['GET', 'POST'])
+@login_required
+def editUsername():
+    user_id = session.get('user_id', None)
+    settingsForm = CreateUsernameSettingsForm()
+    if settingsForm.validate_on_submit():
+        dun = request.form['desiredUsername']
+        print("Desired name: " + dun);
+        user = Users.query.filter_by(username=dun).first()  # if this returns a user, then it already exists
+        if user:  # if a user is found, we want to redirect back to signup page so user can try again
+            message = f"Username taken, try Again."
+            return render_template('editUsername.html', user_id=user_id, message=message, usernameSettingsForm=settingsForm)
+
+    return render_template('editUsername.html', user_id=user_id, usernameSettingsForm=settingsForm)
+
+# edit password
+@app.route('/userSettings/editPassword', methods=['GET', 'POST'])
+@login_required
+def editPassword():
+    user_id = session.get('user_id', None)
+    settingsForm = CreatePasswordSettingsForm()
+    if settingsForm.validate_on_submit():
+        cpw = request.form['currentPassword']
+        npw = request.form['newPassword']
+        print("New password passes regex: " + npw)
+        user = Users.query.filter_by(user_id=user_id).first()  # if this returns a user, then it already exists
+        if user is None or not user.check_pw(cpw):
+            message = f"Incorrect Password."
+            return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm, message=message)
+
+    return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm)
 
 # Users Endpoints
 # Route for getting a list of all users from DB
@@ -349,7 +402,9 @@ def view_list():
 def logout():
     logout_user()
     session.pop('user_id')
-    session.pop('list_id')
+    # only try to pop list_id if it's been set, otherwise we get an error
+    if session.get('list_id'):
+        session.pop('list_id')
     return redirect(url_for('login'))
 
 

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <center>
+        <h2 class="card-title">Update User Settings</h2>
+        <br>
+        <br>
+        <button class="btn btn-warning" id="username">Change Username</button>
+        <br>
+        <br>
+        <button class="btn btn-warning" id="password">Change Password</button>
+        <br>
+        <br>
+        <button class="btn btn-danger" id="delete">Delete User</button>
+        </center>
+    </div>
+</div>
+<script>
+    $("#username").on("click", function(){
+        window.location.replace("{{ url_for('editUsername') }}")
+    })
+    $("#password").on("click", function(){
+        window.location.replace("{{ url_for('editPassword') }}")
+    })
+    $("#delete").on("click", function (){
+        alert("Delete User")
+    })
+</script>
+{% endblock %}
