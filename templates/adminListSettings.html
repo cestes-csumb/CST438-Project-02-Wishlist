@@ -20,7 +20,7 @@
             let url = "{{ url_for('getLists')}}"
             $.getJSON(url, function (result) {
                 for (i = 0; i < result.length; i++) {
-                    $(".lists").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].list_name + "</h3>"
+                    $(".lists").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].list_name + "</h3>" + "<hr><h5>"+ "List ID:"  + result[i].list_id+ "</h5>"
                         + "<form action=\"\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
                         + "\"></form><form action=\"adminDeleteList\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\""
                         + result[i].list_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete List\"></form></div></div><br><br>")

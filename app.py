@@ -402,7 +402,7 @@ def adminListSettings():
         return render_template('adminListSettings.html')
 
 #SOMEONE TAKE THE WHEEL; NEEDS ADMIN AUTH
-@app.route('/adminListSettings')
+@app.route('/adminUserSettings')
 @login_required
 def adminUserSettings():
         return render_template('adminUserSettings.html')
@@ -524,8 +524,10 @@ def adminDeletelist():
 @app.route('/adminDeleteUser', methods=['POST'])
 @login_required
 def adminDeleteUser():
-    uid = request.form['list_id']
+    uid = request.form['user_id']
     user_id = session.get('user_id', None)
+    username = session.get('username', None)
+    user1 = Users.query.filter_by(username=username).first()
     user = Users.query.filter_by(user_id=uid).one()
     #if list and (list.user_id == user_id):
     db.session.delete(user)
