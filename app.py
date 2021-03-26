@@ -139,16 +139,19 @@ class CreateLoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign-In')
 
+
 class CreateUsernameSettingsForm(FlaskForm):
     desiredUsername = StringField('Desired Username', validators=[InputRequired()])
     submit = SubmitField('Update Username')
 
+
 class CreatePasswordSettingsForm(FlaskForm):
     currentPassword = PasswordField('Current Password', validators=[InputRequired()])
     # regex based on: https://www.geeksforgeeks.org/check-if-a-string-contains-uppercase-lowercase-special-characters-and-numeric-values/
-    newPassword = PasswordField('New Password', validators=[InputRequired(), Length(min=6, max=500, message="Invalid Length"),
-                                                            Regexp(regex="(?=.*[a-zA-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*., ?])+",
-                                                                   message="Must be alphanumeric AND contain a special character")])
+    newPassword = PasswordField('New Password',
+                                validators=[InputRequired(), Length(min=6, max=500, message="Invalid Length"),
+                                            Regexp(regex="(?=.*[a-zA-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*., ?])+",
+                                                   message="Must be alphanumeric AND contain a special character")])
     submit = SubmitField('Update Password')
 
 
@@ -219,6 +222,7 @@ def createList():
                 ), 'error')
         return render_template('createList.html', listform=listform)
 
+
 # !!! not working needs to pull list_id from somewhere
 @app.route('/createItem', methods=['GET', 'POST'])
 @login_required
@@ -250,12 +254,14 @@ def createItem():
                 ), 'error')
         return render_template('createItem.html', itemform=itemform)
 
+
 # user settings route
 @app.route('/userSettings', methods=['GET', 'POST'])
 @login_required
 def userSettings():
     user_id = session.get('user_id', None)
     return render_template('userSettings.html', user_id=user_id)
+
 
 # edit username
 @app.route('/userSettings/editUsername', methods=['GET', 'POST'])
@@ -269,9 +275,11 @@ def editUsername():
         user = Users.query.filter_by(username=dun).first()  # if this returns a user, then it already exists
         if user:  # if a user is found, we want to redirect back to signup page so user can try again
             message = f"Username taken, try Again."
-            return render_template('editUsername.html', user_id=user_id, message=message, usernameSettingsForm=settingsForm)
+            return render_template('editUsername.html', user_id=user_id, message=message,
+                                   usernameSettingsForm=settingsForm)
 
     return render_template('editUsername.html', user_id=user_id, usernameSettingsForm=settingsForm)
+
 
 # edit password
 @app.route('/userSettings/editPassword', methods=['GET', 'POST'])
@@ -286,9 +294,11 @@ def editPassword():
         user = Users.query.filter_by(user_id=user_id).first()  # if this returns a user, then it already exists
         if user is None or not user.check_pw(cpw):
             message = f"Incorrect Password."
-            return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm, message=message)
+            return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm,
+                                   message=message)
 
     return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm)
+
 
 # Users Endpoints
 # Route for getting a list of all users from DB
@@ -356,6 +366,7 @@ def get_list_by_user_id(uid):
     list = Lists.query.filter_by(user_id=uid).all()
     return jsonify(list)
 
+
 # Route for deleting an item in the list
 @app.route('/deleteItem:lid=<lid>', methods=['GET'])
 def delete_item(lid):
@@ -374,6 +385,7 @@ def update_item(lid):
         db.session.commit()
     return render_template('createItem.html', form=form)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     loginform = CreateLoginForm()
@@ -389,6 +401,7 @@ def login():
         return redirect(url_for('homepage'))
     return render_template('loginpage.html', title='Log In', loginform=loginform)
 
+
 # shows all wishlists associated with user, gathers required info for user to view wishlist
 @app.route('/myWishlists', methods=['GET', 'POST'])
 @login_required
@@ -398,6 +411,7 @@ def currentLists():
         session['list_id'] = request.form['list_id']
         return redirect(url_for('view_list'))
     return render_template('currentLists.html', user_id=user_id)
+
 
 # shows all items in current wishlist, linked from myWishlists
 @app.route('/wishlist', methods=['GET', 'POST'])
@@ -412,6 +426,7 @@ def view_list():
         return redirect(url_for('edit_item'))
 
     return render_template('myWishlist.html', user_id=user_id, list_id=list_id)
+
 
 @app.route('/editItem', methods=['GET', 'POST'])
 @login_required
@@ -429,7 +444,38 @@ def edit_item():
         itemform.image_url.data = item.image_url
         itemform.item_url.data = item.item_url
         itemform.item_priority.data = item.item_priority
-        return render_template('editItem.html', itemform=itemform, item_id=item_id, user_id=user_id, list_id=list_id, item_name=item.item_name)
+        return render_template('editItem.html', itemform=itemform, item_id=item_id, user_id=user_id, list_id=list_id,
+                               item_name=item.item_name)
+    if itemform.validate_on_submit():
+        item.item_name = request.form['item_name']
+        item.item_description = request.form['item_description']
+        item.image_url = request.form['image_url']
+        item.item_url = request.form['item_url']
+        item.item_priority = request.form['item_priority']
+        # Flask-SQLAlchemy adds to database here
+        db.session.commit()
+        # create a message to send to the template
+        message = f"Item was updated."
+        return render_template('editItem.html', message=message)
+    else:
+        # show errors
+        for field, errors in itemform.errors.items():
+            for error in errors:
+                flash("Error in {}: {}".format(
+                    getattr(itemform, field).label.text,
+                    error
+                ), 'error')
+        return render_template('createItem.html', itemform=itemform)
+
+#currently has no userchecking, fix later
+@app.route('/deleteItem', methods=['POST'])
+def deleteItem():
+    iid = request.form['item_id']
+    item = Items.query.filter_by(item_id=iid).one()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+    return redirect(url_for('view_list'))
 
 
 @app.route('/logout')
@@ -440,7 +486,6 @@ def logout():
     if session.get('list_id'):
         session.pop('list_id')
     return redirect(url_for('login'))
-
 
 
 @app.route('/deleteList', methods=['POST'])
