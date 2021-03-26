@@ -10,7 +10,7 @@
 
 {% block body %}
 <body>
-{% if current_user.is_authenticated %}
+
 {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 <ul class="navbar-nav">
@@ -26,18 +26,18 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('userSettings') }}">Settings</a>
     </li>
-    {% if isAdmin == 'true' %}
-        <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('homepage') }}">Admin</a>
-        </li>
-    {% endif %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('adminSettings') }}">Admin</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+    </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
     </li>
 </ul>
     </nav>
 {% endblock %}
-{% endif %}
 
     <hr>
     {% with messages = get_flashed_messages() %}

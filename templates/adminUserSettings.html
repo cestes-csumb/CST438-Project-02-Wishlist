@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Admin Delete Lists
+{% endblock %}
+
+{% block content %}
+
+        <div class="users" class ="center"></div>
+
+
+    <script>
+        async function fetchJson() {
+            let url = "{{ url_for('getUsers')}}"
+            $.getJSON(url, function (result) {
+                for (i = 0; i < result.length; i++) {
+                    $(".users").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].username + "</h3>" + "<hr><h5>"+ "User ID:"  + result[i].user_id+ "</h5>"
+                        + "<form action=\"\" method=\"post\"><input type=\"hidden\" name=\"user_id\" value=\"" + result[i].user_id
+                        + "\"></form><form action=\"adminDeleteUser\" method=\"post\"><input type=\"hidden\" name=\"user_id\" value=\""
+                        + result[i].user_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete User\"></form></div></div><br><br>")
+                }
+            })
+        }
+        fetchJson();
+    </script>
+{% endblock %}
+
+
+</html>

@@ -32,7 +32,14 @@
         window.location.replace("{{ url_for('editPassword') }}")
     })
     $("#delete").on("click", function (){
-        alert("Delete User")
+        var makeSure=true;
+        if (makeSure) {
+            if (confirm('Really delete account?')) {
+                window.location.replace("{{ url_for('deleteSelf') }}");
+            } else {
+                alert('Action cancelled');
+            }
+        }
     })
 </script>
 {% endblock %}
