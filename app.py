@@ -154,6 +154,12 @@ class CreatePasswordSettingsForm(FlaskForm):
                                                    message="Must be alphanumeric AND contain a special character")])
     submit = SubmitField('Update Password')
 
+@app.context_processor
+def checkAdmin():
+    if(session.get('is_admin', None) == 'Y'):
+        return dict(isAdmin='true')
+    else:
+        return dict(isAdmin='false')
 
 # root route
 @app.route('/', methods=['GET'])
@@ -495,6 +501,8 @@ def logout():
     # only try to pop list_id if it's been set, otherwise we get an error
     if session.get('list_id'):
         session.pop('list_id')
+    if session.get('is_admin'):
+        session.pop('is_admin')
     return redirect(url_for('login'))
 
 
