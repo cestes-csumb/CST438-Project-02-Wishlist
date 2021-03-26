@@ -389,17 +389,17 @@ def login():
         return redirect(url_for('homepage'))
     return render_template('loginpage.html', title='Log In', loginform=loginform)
 
-
-@app.route('/adminSettings')
+#SOMEONE TAKE THE WHEEL
+@app.route('/adminUserSettings')
 @login_required
 def adminSettings():
-    user_id = session.get('user_id', None)
-    isAdmin = session.get('isAdmin', None)
-    if user_id.is_admin == 'Y':
-        return render_template('adminSettings.html')
-    if user_id.is_admin == 'N':
-        flash('Not authorized to access admin settings')
-        return render_template('homepage.html')
+    # user_id = session.get('user_id', None)
+    # isAdmin = session.get('isAdmin', None)
+    # if user_id.is_admin == 'Y':
+        return render_template('adminUserSettings.html')
+    # if user_id.is_admin == 'N':
+    #     flash('Not authorized to access admin settings')
+    #     return render_template('homepage.html')
 
 
 # shows all wishlists associated with user, gathers required info for user to view wishlist
@@ -492,6 +492,18 @@ def logout():
 @app.route('/deleteList', methods=['POST'])
 @login_required
 def deletelist():
+    lid = request.form['list_id']
+    user_id = session.get('user_id', None)
+    list = Lists.query.filter_by(list_id=lid).one()
+    if list and (list.user_id == user_id):
+        db.session.delete(list)
+        db.session.commit()
+    return redirect(url_for('currentLists'))
+
+#BRIAN TAKE THE WHEEL
+@app.route('/adminDeleteList', methods=['POST'])
+@login_required
+def adminDeletelist():
     lid = request.form['list_id']
     user_id = session.get('user_id', None)
     list = Lists.query.filter_by(list_id=lid).one()
