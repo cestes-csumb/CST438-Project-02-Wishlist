@@ -409,9 +409,27 @@ def view_list():
     # store the item_id as part of the session and print it to the console
     if request.method == 'POST':
         session['item_id'] = request.form['item_id']
-        print(session.get('item_id'))
+        return redirect(url_for('edit_item'))
 
     return render_template('myWishlist.html', user_id=user_id, list_id=list_id)
+
+@app.route('/editItem', methods=['GET', 'POST'])
+@login_required
+def edit_item():
+    itemform = CreateItemForm()
+    user_id = session.get('user_id', None)
+    list_id = session.get('list_id', None)
+    item_id = session.get('item_id', None)
+    item = Items.query.filter_by(item_id=item_id).one()
+    # follow the advice outlined in the post about using the GET method
+    # https://stackoverflow.com/questions/23712986/pre-populate-a-wtforms-in-flask-with-data-from-a-sqlalchemy-object
+    if request.method == 'GET':
+        itemform.item_name.data = item.item_name
+        itemform.item_description.data = item.item_description
+        itemform.image_url.data = item.image_url
+        itemform.item_url.data = item.item_url
+        itemform.item_priority.data = item.item_priority
+        return render_template('editItem.html', itemform=itemform, item_id=item_id, user_id=user_id, list_id=list_id, item_name=item.item_name)
 
 
 @app.route('/logout')
