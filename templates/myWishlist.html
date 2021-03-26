@@ -46,7 +46,7 @@
                                 "<td>" + result[i].item_description + "</td><td><a href=\"" + result[i].item_url +
                                 "\">" + result[i].item_url + "</a></td>" + "<td><b>" + result[i].item_priority + "</b></td>"
                                 + "<td><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"item_id\" value=\"" + result[i].item_id
-                                + "\"><input type=\"submit\" class='btn btn-danger' value=\"Edit\"></form></td></tr>")
+                                + "\"><input type=\"submit\" class='btn btn-danger' value=\"Edit\"></form><form action=\"deleteItem\" method=\"post\"><input type=\"hidden\" name=\"item_id\" value=\"" + result[i].item_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete\"></form></td></tr>")
                         }
                         $(".wishlist-items").append("<hr><br>")
                     }
