@@ -76,7 +76,7 @@ class Lists(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     # define relationship between lists and users
 
-    users = db.relationship('Users', backref=db.backref('lists', lazy=True))
+    users = db.relationship('Users', backref=db.backref('lists', cascade="all, delete-orphan", lazy=True))
     list_name = db.Column(db.String(20))
 
 
@@ -101,7 +101,7 @@ class Items(db.Model):
     # foreign key is from Lists table
     list_id = db.Column(db.Integer, db.ForeignKey('lists.list_id'))
     # define relationship between items and lists
-    lists = db.relationship('Lists', backref=db.backref('items', lazy=True))
+    lists = db.relationship('Lists', backref=db.backref('items', cascade="all, delete-orphan", lazy=True))
 
     # foreign key is from Users table
     marked_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
@@ -163,7 +163,6 @@ def homepage():
     return render_template("homepage.html", id=user_id)
 
 
-# currently testing and trying to make work
 @app.route('/createAccount', methods=['GET', 'POST'])
 def createAccount():
     userform = CreateUserForm()
@@ -197,7 +196,6 @@ def createAccount():
         return render_template('createAccount.html', userform=userform)
 
 
-# !!! not working, would work but needs to pull user_id from login session
 @app.route('/createList', methods=['GET', 'POST'])
 @login_required
 def createList():
@@ -223,7 +221,6 @@ def createList():
         return render_template('createList.html', listform=listform)
 
 
-# !!! not working needs to pull list_id from somewhere
 @app.route('/createItem', methods=['GET', 'POST'])
 @login_required
 def createItem():
@@ -376,25 +373,6 @@ def get_list_by_user_id(uid):
     return jsonify(list)
 
 
-# Route for deleting an item in the list
-@app.route('/deleteItem:lid=<lid>', methods=['GET'])
-def delete_item(lid):
-    lid.query.filter(item_id=lid).delete()
-    db.session.commit()
-    return 'Item deleted'
-
-
-# Route for updating item in the list
-@app.route('/updateItem/<lid>', methods=['GET'])
-def update_item(lid):
-    item = db.session.query(Items).get(lid)
-    form = createItem(object=item)
-    if form.validate_on_submit:
-        form.populate_obj(item)
-        db.session.commit()
-    return render_template('createItem.html', form=form)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     loginform = CreateLoginForm()
@@ -479,6 +457,7 @@ def edit_item():
 
 #currently has no userchecking, fix later
 @app.route('/deleteItem', methods=['POST'])
+@login_required
 def deleteItem():
     iid = request.form['item_id']
     item = Items.query.filter_by(item_id=iid).one()
@@ -510,16 +489,19 @@ def deletelist():
     return redirect(url_for('currentLists'))
 
 
-@app.route('/deleteUser', methods=['POST'])
+@app.route('/deleteSelf', methods=['GET'])
 @login_required
-def deleteUser():
-    uid = request.form['user_id']
-    user_id = session.get('user_id', None)
+def deleteSelf():
+    uid = session.get('user_id', None)
     user = Users.query.filter_by(user_id=uid).one()
-    if user and (user.user_id == user_id or session.get('is_admin', None) == 'Y'):
+    if user:
+        logout_user()
+        session.pop('user_id')
+        session.pop('list_id')
+        session.pop('is_admin')
         db.session.delete(user)
         db.session.commit()
-    return redirect(url_for('homepage')) #admin userlist will go here
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
