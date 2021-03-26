@@ -257,6 +257,15 @@ def userSettings():
     user_id = session.get('user_id', None)
     return render_template('userSettings.html', user_id=user_id)
 
+
+
+@app.route('/adminSettings', method=['GET', 'POST'])
+@login_required
+def adminSettings():
+    user_id = session.get('user_id', None)
+    isAdmin = session.get('isAdmin', )
+
+
 # edit username
 @app.route('/userSettings/editUsername', methods=['GET', 'POST'])
 @login_required
