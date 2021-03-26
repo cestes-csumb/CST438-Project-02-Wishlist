@@ -277,6 +277,11 @@ def editUsername():
             message = f"Username taken, try Again."
             return render_template('editUsername.html', user_id=user_id, message=message,
                                    usernameSettingsForm=settingsForm)
+        if not user:
+            user = Users.query.filter_by(user_id=user_id).first()
+            if user.user_id == user_id:
+                user.username = dun
+                db.session.commit()
 
     return render_template('editUsername.html', user_id=user_id, usernameSettingsForm=settingsForm)
 
@@ -296,6 +301,10 @@ def editPassword():
             message = f"Incorrect Password."
             return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm,
                                    message=message)
+        if user and user.check_pw(cpw) and (user_id == user.user_id or session.get('is_admin', None) == 'Y'):
+            pw_hashed = bcrypt.generate_password_hash(npw).decode('utf-8')
+            user.password = pw_hashed
+            db.session.commit()
 
     return render_template('editPassword.html', user_id=user_id, passwordSettingsForm=settingsForm)
 
@@ -398,6 +407,7 @@ def login():
             return render_template('loginpage.html', title='Log In', loginform=loginform)
         login_user(user)
         session['user_id'] = user.user_id
+        session['is_admin'] = user.is_admin
         return redirect(url_for('homepage'))
     return render_template('loginpage.html', title='Log In', loginform=loginform)
 
@@ -489,14 +499,27 @@ def logout():
 
 
 @app.route('/deleteList', methods=['POST'])
+@login_required
 def deletelist():
     lid = request.form['list_id']
     user_id = session.get('user_id', None)
     list = Lists.query.filter_by(list_id=lid).one()
-    if list and list.user_id == user_id:
+    if list and (list.user_id == user_id):
         db.session.delete(list)
         db.session.commit()
     return redirect(url_for('currentLists'))
+
+
+@app.route('/deleteUser', methods=['POST'])
+@login_required
+def deleteUser():
+    uid = request.form['user_id']
+    user_id = session.get('user_id', None)
+    user = Users.query.filter_by(user_id=uid).one()
+    if user and (user.user_id == user_id or session.get('is_admin', None) == 'Y'):
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('homepage')) #admin userlist will go here
 
 
 if __name__ == '__main__':
