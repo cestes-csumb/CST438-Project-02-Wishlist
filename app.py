@@ -1,5 +1,5 @@
 # app.py
-# Authors: Chris Estes, Brian Carbonneau, Madeleine Macaulay
+# Authors: Chris Estes, Brian Carbonneau, Madeleine Macaulay, Breanna Holloman
 from dataclasses import dataclass
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, session
@@ -30,12 +30,12 @@ class Users(db.Model):
     user_id: int
     username: str
     password: str
-    is_admin: str
+    is_admin: chr
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(200))
-    is_admin = db.Column(db.String(1))
+    is_admin = db.Column(db.CHAR(1))
 
     def check_pw(self, checkstring):
         return bcrypt.check_password_hash(self.password, checkstring)
@@ -108,6 +108,24 @@ class Items(db.Model):
     # define relationship between items and users
     users = db.relationship('Users', backref=db.backref('items', lazy=True))
 
+@dataclass
+class Friends(db.Model):
+    fusername: str
+    link_id: int
+    friend_id: int
+    user_id: int
+
+    link_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fusername = db.Column(db.String(20))
+
+    # foreign key is from users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    friend_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    # define relationship between lists and users
+
+    user = db.relationship('Users', foreign_keys=[user_id], backref=db.backref('friends', cascade="all, delete-orphan", lazy=True))
+    friend = db.relationship('Users', foreign_keys=[friend_id], backref=db.backref('friends2', cascade="all, delete-orphan", lazy=True))
+
 
 class CreateUserForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
@@ -153,6 +171,11 @@ class CreatePasswordSettingsForm(FlaskForm):
                                             Regexp(regex="(?=.*[a-zA-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*., ?])+",
                                                    message="Must be alphanumeric AND contain a special character")])
     submit = SubmitField('Update Password')
+
+
+class CreateFriendForm(FlaskForm):
+    fusername = StringField('Friends Username', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
+    submit = SubmitField('Add Friend')
 
 @app.context_processor
 def checkAdmin():
@@ -395,22 +418,31 @@ def login():
         return redirect(url_for('homepage'))
     return render_template('loginpage.html', title='Log In', loginform=loginform)
 
-#SOMEONE TAKE THE WHEEL; NEEDS ADMIN AUTH
+
 @app.route('/adminSettings')
 @login_required
 def adminSettings():
+    if (session.get('is_admin', None) != 'Y'):
+        return render_template('homepage.html')
+    else:
         return render_template('adminSettings.html')
 
-#SOMEONE TAKE THE WHEEL; NEEDS ADMIN AUTH
+
 @app.route('/adminListSettings')
 @login_required
 def adminListSettings():
+    if (session.get('is_admin', None) != 'Y'):
+        return render_template('homepage.html')
+    else:
         return render_template('adminListSettings.html')
 
-#SOMEONE TAKE THE WHEEL; NEEDS ADMIN AUTH
+
 @app.route('/adminUserSettings')
 @login_required
 def adminUserSettings():
+    if(session.get('is_admin', None) != 'Y'):
+        return render_template('homepage.html')
+    else:
         return render_template('adminUserSettings.html')
 
 
@@ -515,31 +547,26 @@ def deletelist():
         db.session.commit()
     return redirect(url_for('currentLists'))
 
-#BRIAN TAKE THE WHEEL
+
 @app.route('/adminDeleteList', methods=['POST'])
 @login_required
 def adminDeletelist():
     lid = request.form['list_id']
-    #user_id = session.get('user_id', None)
     list = Lists.query.filter_by(list_id=lid).one()
-    #if list and (list.user_id == user_id):
-    db.session.delete(list)
-    db.session.commit()
+    if (session.get('is_admin', None) == 'Y'):
+        db.session.delete(list)
+        db.session.commit()
     return redirect(url_for('adminListSettings'))
 
 
-#BRIAN TAKE THE WHEEL
 @app.route('/adminDeleteUser', methods=['POST'])
 @login_required
 def adminDeleteUser():
     uid = request.form['user_id']
-    user_id = session.get('user_id', None)
-    username = session.get('username', None)
-    user1 = Users.query.filter_by(username=username).first()
     user = Users.query.filter_by(user_id=uid).one()
-    #if list and (list.user_id == user_id):
-    db.session.delete(user)
-    db.session.commit()
+    if (session.get('is_admin', None) == 'Y'):
+        db.session.delete(user)
+        db.session.commit()
     return redirect(url_for('adminUserSettings'))
 
 
@@ -557,6 +584,37 @@ def deleteSelf():
         db.session.commit()
     return redirect(url_for('login'))
 
+
+# Route for getting friends list
+@app.route('/Friends')
+def getFriends():
+    user_id = session.get('user_id', None)
+    friends = Friends.query.filter_by(user_id=user_id).all()
+    return jsonify(friends)
+
+#friends page route
+@app.route('/friendsList', methods=['GET', 'POST'])
+def friendspage():
+    friendform = CreateFriendForm()
+    if friendform.validate_on_submit():
+        uid = session.get('user_id', None)
+        fun = request.form['fusername']
+        toadd = Users.query.filter_by(username=fun).first()
+        exists = db.session.query(Friends.friend_id).filter_by(user_id=uid).first() is not None
+        if toadd and not exists:
+            newfriend = Friends(user_id=uid, friend_id=toadd.user_id, fusername=fun)
+            db.session.add(newfriend)
+            db.session.commit()
+            return render_template('friends.html', friendform=friendform)
+        else:
+            flash('User not found or already friended')
+    return render_template('friends.html', friendform=friendform)
+
+#Still need to do something with this
+@app.route('/friendsWishLists', methods=['POST'])
+@login_required
+def friendsWishLists():
+    fid = request.form['friend_id']
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)

@@ -25,6 +25,9 @@
             <a class="nav-link" href="{{ url_for('createList') }}">New List</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('friendspage') }}">Friends</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ url_for('userSettings') }}">Settings</a>
         </li>
         {% if isAdmin == 'true' %}
