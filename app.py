@@ -412,6 +412,18 @@ def login():
     return render_template('loginpage.html', title='Log In', loginform=loginform)
 
 
+@app.route('/adminSettings')
+@login_required
+def adminSettings():
+    user_id = session.get('user_id', None)
+    isAdmin = session.get('isAdmin', None)
+    if user_id.is_admin == 'Y':
+        return render_template('adminSettings.html')
+    if user_id.is_admin == 'N':
+        flash('Not authorized to access admin settings')
+        return render_template('homepage.html')
+
+
 # shows all wishlists associated with user, gathers required info for user to view wishlist
 @app.route('/myWishlists', methods=['GET', 'POST'])
 @login_required
