@@ -533,12 +533,13 @@ def deleteItem():
 @app.route('/logout')
 def logout():
     logout_user()
-    session.pop('user_id')
+    #session.pop('user_id')
     # only try to pop list_id if it's been set, otherwise we get an error
-    if session.get('list_id'):
-        session.pop('list_id')
-    if session.get('is_admin'):
-        session.pop('is_admin')
+    #if session.get('list_id'):
+    #    session.pop('list_id')
+    #if session.get('is_admin'):
+    #    session.pop('is_admin')
+    session.clear()
     return redirect(url_for('login'))
 
 
@@ -583,12 +584,13 @@ def deleteSelf():
     user = Users.query.filter_by(user_id=uid).one()
     if user:
         logout_user()
-        session.pop('user_id')
+        #session.pop('user_id')
         # only try to pop list_id if it's been set, otherwise we get an error
-        if session.get('list_id'):
-            session.pop('list_id')
-        if session.get('is_admin'):
-            session.pop('is_admin')
+        #if session.get('list_id'):
+        #    session.pop('list_id')
+        #if session.get('is_admin'):
+        #    session.pop('is_admin')
+        session.clear()
         db.session.delete(user)
         db.session.commit()
     return redirect(url_for('login'))
