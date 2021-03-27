@@ -655,7 +655,7 @@ def friendsWishLists():
 def view_flist():
     user_id = session.get('friend_id', None)
     list_id = request.form['list_id']
-    return render_template('FWishlist.html', user_id=user_id, list_id=list_id)
+    return render_template('FWishList.html', user_id=user_id, list_id=list_id)
 
 
 if __name__ == '__main__':
