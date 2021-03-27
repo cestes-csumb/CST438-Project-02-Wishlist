@@ -108,6 +108,7 @@ class Items(db.Model):
     # define relationship between items and users
     users = db.relationship('Users', backref=db.backref('items', lazy=True))
 
+
 @dataclass
 class Friends(db.Model):
     fusername: str
@@ -123,8 +124,10 @@ class Friends(db.Model):
     friend_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     # define relationship between lists and users
 
-    user = db.relationship('Users', foreign_keys=[user_id], backref=db.backref('friends', cascade="all, delete-orphan", lazy=True))
-    friend = db.relationship('Users', foreign_keys=[friend_id], backref=db.backref('friends2', cascade="all, delete-orphan", lazy=True))
+    user = db.relationship('Users', foreign_keys=[user_id],
+                           backref=db.backref('friends', cascade="all, delete-orphan", lazy=True))
+    friend = db.relationship('Users', foreign_keys=[friend_id],
+                             backref=db.backref('friends2', cascade="all, delete-orphan", lazy=True))
 
 
 class CreateUserForm(FlaskForm):
@@ -174,15 +177,18 @@ class CreatePasswordSettingsForm(FlaskForm):
 
 
 class CreateFriendForm(FlaskForm):
-    fusername = StringField('Friends Username', validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
+    fusername = StringField('Friends Username',
+                            validators=[InputRequired(), Length(min=6, max=20, message="Invalid Length")])
     submit = SubmitField('Add Friend')
+
 
 @app.context_processor
 def checkAdmin():
-    if(session.get('is_admin', None) == 'Y'):
+    if (session.get('is_admin', None) == 'Y'):
         return dict(isAdmin='true')
     else:
         return dict(isAdmin='false')
+
 
 # root route
 @app.route('/', methods=['GET'])
@@ -440,11 +446,10 @@ def adminListSettings():
 @app.route('/adminUserSettings')
 @login_required
 def adminUserSettings():
-    if(session.get('is_admin', None) != 'Y'):
+    if (session.get('is_admin', None) != 'Y'):
         return render_template('homepage.html')
     else:
         return render_template('adminUserSettings.html')
-
 
 
 # shows all wishlists associated with user, gathers required info for user to view wishlist
@@ -512,7 +517,8 @@ def edit_item():
                 ), 'error')
         return render_template('createItem.html', itemform=itemform)
 
-#currently has no userchecking, fix later
+
+# currently has no userchecking, fix later
 @app.route('/deleteItem', methods=['POST'])
 @login_required
 def deleteItem():
@@ -592,7 +598,8 @@ def getFriends():
     friends = Friends.query.filter_by(user_id=user_id).all()
     return jsonify(friends)
 
-#friends page route
+
+# friends page route
 @app.route('/friendsList', methods=['GET', 'POST'])
 def friendspage():
     friendform = CreateFriendForm()
@@ -610,11 +617,24 @@ def friendspage():
             flash('User not found or already friended')
     return render_template('friends.html', friendform=friendform)
 
-#Still need to do something with this
+
+# Still need to do something with this
 @app.route('/friendsWishLists', methods=['POST'])
 @login_required
 def friendsWishLists():
-    fid = request.form['friend_id']
+    friend = Users.query.filter_by(user_id=request.form['friend_id']).first()
+    session['friend_un'] = friend.username
+    session['friend_id'] = request.form['friend_id']
+    return render_template('FListSel.html', friend_id=session.get('friend_id', None))
+
+
+@app.route('/Fwishlist', methods=['POST'])
+@login_required
+def view_flist():
+    user_id = session.get('friend_id', None)
+    list_id = request.form['list_id']
+    return render_template('FWishlist.html', user_id=user_id, list_id=list_id)
+
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)

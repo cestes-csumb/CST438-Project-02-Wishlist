@@ -9,19 +9,19 @@
 {% endblock %}
 
 {% block title %}
-    My Wishlists
+    Friends Wishlists
 {% endblock %}
 
 {% block content %}
-    <center><h1 class="pt-5 pb-2">My Lists</h1></center>
+    <center><h1 class="pt-5 pb-2">{{ session.get('friend_un', None) }}'s Lists</h1></center>
     <script>
             async function fetchJson(){
-                let url = "{{ url_for('get_list_by_user_id', uid=user_id) }}"
+                let url = "{{ url_for('get_list_by_user_id', uid=friend_id) }}"
                 $.getJSON(url, function(result){
                     for(i = 0; i< result.length; i++){
                         $(".wishlist").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].list_name + "</h3>"
-                        +"<form action=\"\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
-                        + "\"><input type=\"submit\" class='btn btn-success' value=\"View List\"></form><form action=\"deleteList\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete List\"></form></div></div><br><br>")
+                        +"<form action=\"Fwishlist\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
+                        + "\"><input type=\"submit\" class='btn btn-success' value=\"View List\"></form></div></div><br><br>")
                     }
                 })
             }
