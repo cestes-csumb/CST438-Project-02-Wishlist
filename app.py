@@ -629,7 +629,7 @@ def friendspage():
         uid = session.get('user_id', None)
         fun = request.form['fusername']
         toadd = Users.query.filter_by(username=fun).first()
-        exists = db.session.query(Friends.friend_id).filter_by(user_id=uid).first() is not None
+        exists = db.session.query(Friends).filter_by(user_id=uid, fusername=fun).first() is not None
         if toadd and not exists:
             newfriend = Friends(user_id=uid, friend_id=toadd.user_id, fusername=fun)
             db.session.add(newfriend)
@@ -656,6 +656,18 @@ def view_flist():
     user_id = session.get('friend_id', None)
     list_id = request.form['list_id']
     return render_template('FWishList.html', user_id=user_id, list_id=list_id)
+
+
+@app.route('/deleteFriend', methods=['POST'])
+@login_required
+def deleteFriend():
+    uid = session.get('user_id', None)
+    flid = request.form['link_id']
+    flink = Friends.query.filter_by(link_id=flid).one()
+    if flink and flink.user_id == uid:
+        db.session.delete(flink)
+        db.session.commit()
+    return redirect(url_for('friendspage'))
 
 
 if __name__ == '__main__':
