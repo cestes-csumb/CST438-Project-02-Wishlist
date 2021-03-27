@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+</head>
+<body id="footbg" class="center">
+<div id="white">
+    <nav class="padding" class="padding">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('homepage') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}">Log Out</a>
+            </li>
+        </ul>
+    </nav>
+    <hr>
+
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">Product Options</h2>
+
+        <br>
+        <button type="button"  class="btn btn-warning"><a href="/updateMerch"> Update/Delete Product</a></button>
+        <p>(Update/Delete button might need to first return all items, then able to choose a specific item and then user will be redirected to the correct page to edit) </p>
+        <br><br>
+        <button type="button"  class="btn btn-warning"><a href="addProduct"> Add New Product</a></button>
+
+    </div>
+</div>
+</body>
+</html>

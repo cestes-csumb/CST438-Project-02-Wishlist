@@ -1,0 +1,29 @@
+
+{% block head %}
+    <!DOCTYPE html>
+    <html lang="en">
+    {% if title %}
+        <title> {{ title }} - CST438 Wishlist</title>
+    {% else %}
+        <title>CST438 Wishlist</title>
+    {% endif %}
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+
+{% block navbar %}
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('wip_homepage') }}">Home</a>
+    </li>
+{#    <li class="nav-item">#}
+{#        <a class="nav-link" href="{{ url_for('createList') }}">List</a>#}
+{#    </li>#}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('loginpage') }}">Login Out</a>
+    </li>
+</ul>
+{% endblock %}
+
+

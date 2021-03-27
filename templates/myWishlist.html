@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>My Wishlist</title>
+{% endblock %}
+{% block content %}
+<center>
+<div class="wishlist">
+</div>
+<div class="wishlist-items">
+    <table class="table">
+    <tr>
+        <th>Item</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>URL</th>
+        <th>Priority</th>
+        <th>Edit</th>
+    </tr>
+    </table>
+    <hr>
+    <button class='btn btn-success' id='add-item'> Add Item </button><br>
+</div>
+</center>
+<script>
+    async function fetchListName(url){
+        $.getJSON(url, function(result){
+            $(".wishlist").append("<h1 class=\"jumbotron\">" + result.list_name + "</h1>")
+        })
+    }
+
+    async function fetchItems(url){
+                $.getJSON(url, function(result){
+                    if(result.length > 0) {
+                        for (i = 0; i < result.length; i++) {
+                            $(".table").append("<tr><td>" + result[i].item_name +
+                                "</td><td><img src=\"" + result[i].image_url + "\" width=200 height=200></td>" +
+                                "<td>" + result[i].item_description + "</td><td><a href=\"" + result[i].item_url +
+                                "\">" + result[i].item_url + "</a></td>" + "<td><b>" + result[i].item_priority + "</b></td>"
+                                + "<td><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"item_id\" value=\"" + result[i].item_id
+                                + "\"><input type=\"submit\" class='btn btn-danger' value=\"Edit\"></form><form action=\"deleteItem\" method=\"post\"><input type=\"hidden\" name=\"item_id\" value=\"" + result[i].item_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete\"></form></td></tr>")
+                        }
+                        $(".wishlist-items").append("<hr><br>")
+                    }
+                    else{
+                        $(".wishlist-items").append("<h2> No items found!</h2>")
+                    }
+                })
+            }
+    //we use the get_list_by_id endpoint to get the list_name (the list_id is pulled from the session info)
+    let list_url = "{{ url_for('get_list_by_id', id=list_id) }}"
+    fetchListName(list_url);
+    //we use the get_items_by_list_id endpoint to get all items from the DB that have are associated with the list_id
+    let items_url = "{{ url_for('get_items_by_list_id', lid=list_id) }}"
+    fetchItems(items_url);
+    $("#add-item").on("click", function (){
+        window.location.replace("{{ url_for('createItem') }}")
+    })
+</script>
+{% endblock %}
+</html>

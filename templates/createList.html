@@ -10,8 +10,11 @@
 {% endblock %}
 
 
-{% block title %}
-Add a List
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <title> Create A Wishlist</title>
 {% endblock %}
 
 
@@ -21,21 +24,16 @@ Add a List
 	<div class="row pb-5">
 		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-		<h1 class="pt-5 pb-2">Add a New List</h1>
+		<h1 class="pt-5 pb-2">Create A New Wishlist</h1>
 
 		{% if message %}
 
 			<!-- the form was submitted and message exists -->
 			<p class="lead"><strong>{{ message }}</strong></p>
 
-			<!-- links -->
-			<p><a href="{{ url_for('homepage') }}">Return.</a></p>
-
 		{% else %}
 
 			<!-- the form is displayed when template opens via GET not POST -->
-
-			<p class="ml-4"><a href="{{ url_for('homepage') }}">Return to the homepage.</a></p>
 
 			<!-- show flash - based on WTForms validators-->
 			{% with errors = get_flashed_messages() %}
@@ -54,7 +52,9 @@ Add a List
 		    {{ wtf.quick_form(listform) }}
 
 		{% endif %}
-
+        <br>
+        <!-- links -->
+        <center><button class="btn btn-danger"><a href="{{ url_for('homepage') }}">Return</a></button></center>
 		</div>
 	</div>
 </div>

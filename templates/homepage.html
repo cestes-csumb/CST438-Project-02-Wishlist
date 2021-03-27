@@ -2,13 +2,16 @@
 
 {% block styles %}
 {{ super() }}
-	<style>
-		body { background: #ffffff; }
-	</style>
+{#	<style>#}
+{#		body { background: #ffffff; }#}
+{#	</style>#}
 {% endblock %}
 
-{% block title %}
-Homepage
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <title> Wishlist Homepage</title>
 {% endblock %}
 
 {% block content %}
@@ -17,6 +20,7 @@ Homepage
 		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
             <h1 class="pt-5 pb-2">This is the homepage, welcome {{ current_user.username }}</h1>
+            <h2 class="pt-3 pb-2">Current user_id: {{ id }}</h2>
             <h2 class="pt-3 pb-2">API Examples:<br>
                 <ul>
                     <li><a href="{{ url_for('getUsers') }}">All Users</a></li>

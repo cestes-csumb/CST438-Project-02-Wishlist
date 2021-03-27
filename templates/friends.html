@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block content %}
+    <center><h1 class="pt-5 pb-2">My Friends</h1></center>
+    <div class="card">
+        <div class="card-body">
+            {{ wtf.quick_form(friendform) }}
+        </div>
+    </div>
+        <div class="friends" class ="center">
+
+
+    <script>
+        async function fetchJson() {
+            let url = "{{ url_for('getFriends')}}"
+            $.getJSON(url, function (result) {
+                for (i = 0; i < result.length; i++) {
+                    $(".friends").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].fusername
+                        + "<form action=\"friendsWishLists\" method=\"post\"><input type=\"hidden\" name=\"friend_id\" value=\""
+                        + result[i].friend_id + "\"><input type=\"submit\" class='btn btn-success' value=\"View Lists\"></form></div></div><br><br>")
+                }
+            })
+        }
+        fetchJson();
+    </script>
+{% endblock %}
+
+</div>
+</html>

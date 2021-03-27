@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Friends Wishlists
+{% endblock %}
+
+{% block content %}
+    <center><h1 class="pt-5 pb-2">{{ session.get('friend_un', None) }}'s Lists</h1></center>
+    <script>
+            async function fetchJson(){
+                let url = "{{ url_for('get_list_by_user_id', uid=friend_id) }}"
+                $.getJSON(url, function(result){
+                    for(i = 0; i< result.length; i++){
+                        $(".wishlist").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].list_name + "</h3>"
+                        +"<form action=\"Fwishlist\" method=\"post\"><input type=\"hidden\" name=\"list_id\" value=\"" + result[i].list_id
+                        + "\"><input type=\"submit\" class='btn btn-success' value=\"View List\"></form></div></div><br><br>")
+                    }
+                })
+            }
+            fetchJson();
+    </script>
+    <div class="wishlist"></div>
+{% endblock %}
