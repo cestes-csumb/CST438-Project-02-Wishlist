@@ -35,7 +35,7 @@
 			<!-- the form, through WTForms -->
 		    {{ wtf.quick_form(usernameSettingsForm) }}
             <br>
-            <a href="{{ url_for('userSettings') }}">Return.</a>
+            <a class="btn btn-info" href="{{ url_for('userSettings') }}">Return</a>
 		{% endif %}
     </div>
 </div>

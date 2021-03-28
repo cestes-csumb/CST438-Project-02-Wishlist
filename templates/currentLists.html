@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block content %}
+    <body id="homecolor">
     <center><h1 class="pt-5 pb-2">My Lists</h1></center>
     <script>
             async function fetchJson(){
@@ -27,5 +28,6 @@
             }
             fetchJson();
     </script>
-    <div class="wishlist"></div>
+    <div class="wishlist" id="color"></div>
+    </body>
 {% endblock %}

@@ -8,10 +8,11 @@
 {% endblock %}
 
 {% block content %}
+    <body>
 <div class="card">
     <div class="card-body">
         <center>
-        <h2 class="card-title">Update User Settings</h2>
+        <h2 class="card-title" id ="color">Update User Settings</h2>
         <br>
         <br>
         <button class="btn btn-warning" id="username">Change Username</button>
@@ -24,6 +25,7 @@
         </center>
     </div>
 </div>
+
 <script>
     $("#username").on("click", function(){
         window.location.replace("{{ url_for('editUsername') }}")
@@ -42,4 +44,5 @@
         }
     })
 </script>
+    </body>
 {% endblock %}
