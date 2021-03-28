@@ -57,6 +57,11 @@
 #footbg{
   background: rgba(53, 53, 59, 0.5);
 }
+#foot{
+  display: block;
+  text-align: center;
+    background-color: white;
+}
 
 .wishlist{
     display: flex;
