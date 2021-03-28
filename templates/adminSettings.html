@@ -8,10 +8,11 @@
 {% endblock %}
 
 {% block content %}
+    <body id="homecolor">
 <div class="card">
     <div class="card-body">
         <center>
-        <h2 class="card-title">Admin Settings</h2>
+        <h2 class="card-title" id="color">Admin Settings</h2>
         <br>
         <br>
         <button class="btn btn-warning" id="user">Delete User</button>
@@ -23,6 +24,7 @@
         </center>
     </div>
 </div>
+    </body>
 <script>
     $("#user").on("click", function(){
         window.location.replace("{{ url_for('adminUserSettings') }}")

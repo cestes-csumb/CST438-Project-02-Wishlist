@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-
-        <div class="users" class ="center"></div>
+<body id="homecolor" >
+        <div class="users" class ="padding" id="color"></div>
 
 
     <script>
@@ -20,7 +20,7 @@
             let url = "{{ url_for('getUsers')}}"
             $.getJSON(url, function (result) {
                 for (i = 0; i < result.length; i++) {
-                    $(".users").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].username + "</h3>" + "<hr><h5>"+ "User ID:"  + result[i].user_id+ "</h5>"
+                    $(".users").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\" id=\"center\">" + result[i].username + "</h3>" + "<hr><h5>"+ "User ID:"  + result[i].user_id+ "</h5>"
                         + "<form action=\"\" method=\"post\"><input type=\"hidden\" name=\"user_id\" value=\"" + result[i].user_id
                         + "\"></form><form action=\"adminDeleteUser\" method=\"post\"><input type=\"hidden\" name=\"user_id\" value=\""
                         + result[i].user_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete User\"></form></div></div><br><br>")
@@ -29,6 +29,7 @@
         }
         fetchJson();
     </script>
+</body>
 {% endblock %}
 
 
