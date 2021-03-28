@@ -28,7 +28,8 @@
                 for (i = 0; i < result.length; i++) {
                     $(".friends").append("<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h3 class=\"card-title\">" + result[i].fusername
                         + "<form action=\"friendsWishLists\" method=\"post\"><input type=\"hidden\" name=\"friend_id\" value=\""
-                        + result[i].friend_id + "\"><input type=\"submit\" class='btn btn-success' value=\"View Lists\"></form></div></div><br><br>")
+                        + result[i].friend_id + "\"><input type=\"submit\" class='btn btn-success' value=\"View Lists\"></form><form action=\"deleteFriend\" method=\"post\"><input type=\"hidden\" name=\"link_id\" value=\""
+                        + result[i].link_id + "\"><input type=\"submit\" class='btn btn-danger' value=\"Delete\"></form></div></div><br><br>")
                 }
             })
         }
