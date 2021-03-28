@@ -8,10 +8,11 @@
 {% endblock %}
 
 {% block content %}
+    <body id="homecolor">
 <div class="card">
     <div class="card-body">
         <center>
-        <h2 class="card-title">Admin Settings</h2>
+        <h2 class="card-title" id="color">Admin Settings</h2>
         <br>
         <br>
         <button class="btn btn-warning" id="user">Delete User</button>
@@ -23,6 +24,17 @@
         </center>
     </div>
 </div>
+ <br><br>
+    <footer id="foot" id="white">
+        <div id="color">
+    CST 438 Software Engineering 2021
+
+  <span> This website is used for Academic Purposes. </span><br>
+
+    <img src = "https://pajarovalleychamber.com/wp-content/themes/pajaro/img/csumb.png" width ="150", height = "150">
+    </div>
+    </footer>
+    </body>
 <script>
     $("#user").on("click", function(){
         window.location.replace("{{ url_for('adminUserSettings') }}")

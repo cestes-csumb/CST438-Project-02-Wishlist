@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+    <body id="homecolor">
 <div class="card">
     <div class="card-body">
         <h2 class="card-title">Update User Settings</h2>
@@ -35,8 +36,9 @@
 			<!-- the form, through WTForms -->
 		    {{ wtf.quick_form(usernameSettingsForm) }}
             <br>
-            <a href="{{ url_for('userSettings') }}">Return.</a>
+            <a class="btn btn-info" href="{{ url_for('userSettings') }}">Return</a>
 		{% endif %}
     </div>
 </div>
+    </body>
 {% endblock %}

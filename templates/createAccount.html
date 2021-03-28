@@ -8,12 +8,12 @@
         <link href="static/styles.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
-{% block styles %}
-{{ super() }}
-	<style>
-		body { background: #ffffff; }
-	</style>
-{% endblock %}
+{#{% block styles %}#}
+{#{{ super() }}#}
+{#	<style>#}
+{#		body { background: #ffffff; }#}
+{#	</style>#}
+{#{% endblock %}#}
 
 
 {% block title %}
@@ -22,12 +22,12 @@ Create Account
 
 
 {% block content %}
-
-<div class="container">
+<body id="homecolor">
+<div class="container" >
 	<div class="row pb-5">
 		<div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-		<h1 class="pt-5 pb-2">Add a New User</h1>
+		<h1 class="pt-5 pb-2" class="center">Add a New User</h1>
 
 		{% if message %}
 
@@ -64,5 +64,15 @@ Create Account
 		</div>
 	</div>
 </div>
+ <br><br>
+    <footer id="foot" id="white">
+        <div id="color">
+    CST 438 Software Engineering 2021
 
+  <span> This website is used for Academic Purposes. </span><br>
+
+    <img src = "https://pajarovalleychamber.com/wp-content/themes/pajaro/img/csumb.png" width ="150", height = "150">
+    </div>
+    </footer>
+</body>
 {% endblock %}
